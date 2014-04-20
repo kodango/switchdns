@@ -32,7 +32,7 @@
 		</array>
 	</dict>
 	<key>createdby</key>
-	<string>kodango</string>
+	<string>kodango, modify by Cube</string>
 	<key>description</key>
 	<string>快速切换 DNS 服务器设置</string>
 	<key>disabled</key>
@@ -49,7 +49,7 @@
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>keyword</key>
-				<string>dnsp</string>
+				<string>dns</string>
 				<key>runningsubtext</key>
 				<string>Please Wait</string>
 				<key>script</key>
