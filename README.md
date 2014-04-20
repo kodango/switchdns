@@ -29,7 +29,7 @@ Usage
 
 *Alfred 框中输入 dns, 根据提示选择所需DNS即可*
 
-ChangeLog
+Download
 =====
 [Click Me](https://github.com/cuber/switchdns/raw/master/switchdns.alfredworkflow)
 
