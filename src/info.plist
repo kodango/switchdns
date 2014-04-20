@@ -5,21 +5,21 @@
 	<key>bundleid</key>
 	<string>com.kodango.switchdns</string>
 	<key>category</key>
-	<string>Tools</string>
+	<string>Internet</string>
 	<key>connections</key>
 	<dict>
-		<key>15299C7A-CDEA-4359-8898-446F2892DB7C</key>
+		<key>145D79C0-5B81-4825-8B40-5D27C8F15622</key>
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>FF316160-82F1-4AC1-8D82-72A1F0AC9ED6</string>
+				<string>60A5A562-95DC-454A-808C-D331B1804CBD</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
 			</dict>
 		</array>
-		<key>FF316160-82F1-4AC1-8D82-72A1F0AC9ED6</key>
+		<key>60A5A562-95DC-454A-808C-D331B1804CBD</key>
 		<array>
 			<dict>
 				<key>destinationuid</key>
@@ -32,7 +32,7 @@
 		</array>
 	</dict>
 	<key>createdby</key>
-	<string>kodango</string>
+	<string>kodango, modify by Cube</string>
 	<key>description</key>
 	<string>快速切换 DNS 服务器设置</string>
 	<key>disabled</key>
@@ -41,92 +41,6 @@
 	<string>Switch DNS</string>
 	<key>objects</key>
 	<array>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>escaping</key>
-				<integer>127</integer>
-				<key>script</key>
-				<string>#!/bin/bash
-
-#
-# Description: switch DNS profile quickly
-# Author: kodango &lt;dangoakachan@foxmail.com&gt;
-#
-
-# DNS profiles
-# profile name::dns servers
-DNS_PROFILES=$(cat &lt;&lt;EOF
-Default DNS::empty
-Alibaba Public DNS::223.5.5.5 223.6.6.6
-V2EX Public DNS::199.91.73.222 178.79.131.110
-114 Public DNS::114.114.114.114 114.114.115.115
-Google Public DNS::8.8.8.8 8.8.4.4
-OpenerDNS::42.120.21.30
-EOF
-)
-
-# Swith to matched dns profile
-function switch_dns()
-{
-    local dns_profile=$(echo "$DNS_PROFILES" | grep -iE "$1")
-    local dns_name dns_servers
-
-    dns_name=$(echo "$dns_profile" | awk -F:: '{print $1;exit}')
-    dns_servers=$(echo "$dns_profile" | awk -F:: '{print $2;exit}')
-
-    if [ -z "$dns_name" ]; then
-        echo "没有找到匹配的 DNS 配置: '$1'"
-        return
-    fi
-
-    # Get the current network device and corresponding network service name
-    local curr_net_dev=$(netstat -rn | awk '/default/{print $NF}')
-    local curr_net_serv=$(networksetup -listnetworkserviceorder | \
-        awk "/$curr_net_dev/{print \$3}" | tr -d ', ')
-
-    # Clear the dns 
-    dscacheutil -flushcache
-
-    # Set the dns servers
-    networksetup -setdnsservers "$curr_net_serv" $dns_servers
-    #networksetup -getdnsservers "$curr_net_serv"
-
-    echo "切换 DNS 配置到 '$dns_name'"
-}
-
-switch_dns "{query}"</string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>FF316160-82F1-4AC1-8D82-72A1F0AC9ED6</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>keyword</key>
-				<string>dns</string>
-				<key>subtext</key>
-				<string>快速切换 DNS 服务器设置</string>
-				<key>text</key>
-				<string>Switch DNS</string>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>15299C7A-CDEA-4359-8898-446F2892DB7C</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
@@ -152,25 +66,149 @@ switch_dns "{query}"</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>127</integer>
+				<key>script</key>
+				<string>function inet()
+{
+  local net=$(netstat -rn | awk '/default/{print $NF}')
+  echo $(networksetup -listnetworkserviceorder | \
+         awk "/$net/{print \$3}" | tr -d ', ')
+}
+
+dns=$(echo "{query}" | awk -F: '{print $2}' | sed 's/+/ /g')
+name=$(echo "{query}" | awk -F: '{print $1}')
+
+# Clear the dns 
+sudo dscacheutil -flushcache
+
+# Set the dns servers
+sudo networksetup -setdnsservers "$(inet)" $dns
+
+echo "Switch DNS to $name"
+echo $dns | sed 's/ / vs /g'</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>60A5A562-95DC-454A-808C-D331B1804CBD</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>escaping</key>
+				<integer>127</integer>
+				<key>keyword</key>
+				<string>dns</string>
+				<key>runningsubtext</key>
+				<string>Please Wait</string>
+				<key>script</key>
+				<string>P=(
+"Default empty"
+"Alibaba 223.5.5.5 223.6.6.6"
+"V2EX 199.91.73.222 178.79.131.110"
+"DNSPod 114.114.114.114 114.114.115.115"
+"Google 8.8.8.8 8.8.4.4"
+"OpenDNS 42.120.21.30"
+)
+
+function inet()
+{
+  local net=$(netstat -rn | awk '/default/{print $NF}')
+  echo $(networksetup -listnetworkserviceorder | \
+         awk "/$net/{print \$3}" | tr -d ', ')
+}
+
+function item() {
+local s=$(echo $3 | sed 's/+/ vs /g')
+cat &lt;&lt;EOF
+    &lt;item uid="" arg="$4:$1"&gt;
+      &lt;title&gt;$2&lt;/title&gt;
+      &lt;subtitle&gt;$s&lt;/subtitle&gt;
+      &lt;icon&gt;icons/$4.png&lt;/icon&gt;
+    &lt;/item&gt;
+EOF
+}
+
+function cur() {
+  local title dns s
+  dns=$(networksetup -getdnsservers "$(inet)" | tr "\\n" " " | \
+        sed -e 's/ $//g')
+  for ((i = 0; i &lt; ${#P[@]}; i++)); do
+    if [ ! -z $s ]; then break; fi
+    s=$(echo ${P[$i]} | grep -iE "$dns" | awk '{print $1}')
+  done
+  title="Current"
+  if [ -z $s ]; then 
+    s="Default"
+    dns="empty"
+    unset P[0] 
+    P=("${P[@]}")
+  else
+    title="$title:"
+  fi
+  item "$dns" "$title $s" "$dns" $s
+}
+
+function def() {
+  local S name dns ret=cur
+  for ((i = 0; i &lt; ${#P[@]}; i++)); do
+    S=${P[$i]}
+    name=$(echo $S | awk '{print $1}')
+    dns=$(echo $S | awk '{$1=""; print $0}' | \
+          sed -e 's/^ //g' -e 's/ /+/g')
+    item "$dns" $name "$dns" $name
+  done
+}
+
+echo '&lt;?xml version="1.0"?&gt;&lt;items&gt;'
+cur
+def
+echo '&lt;/items&gt;'</string>
+				<key>subtext</key>
+				<string>DNS Switcher</string>
+				<key>title</key>
+				<string>DNS Switcher</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>145D79C0-5B81-4825-8B40-5D27C8F15622</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string></string>
 	<key>uidata</key>
 	<dict>
-		<key>15299C7A-CDEA-4359-8898-446F2892DB7C</key>
+		<key>145D79C0-5B81-4825-8B40-5D27C8F15622</key>
 		<dict>
 			<key>ypos</key>
-			<real>60</real>
+			<real>80</real>
+		</dict>
+		<key>60A5A562-95DC-454A-808C-D331B1804CBD</key>
+		<dict>
+			<key>ypos</key>
+			<real>80</real>
 		</dict>
 		<key>A70A4E1E-712E-4575-967A-0AA64960904D</key>
 		<dict>
 			<key>ypos</key>
-			<real>60</real>
-		</dict>
-		<key>FF316160-82F1-4AC1-8D82-72A1F0AC9ED6</key>
-		<dict>
-			<key>ypos</key>
-			<real>60</real>
+			<real>80</real>
 		</dict>
 	</dict>
 	<key>webaddress</key>
