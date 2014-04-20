@@ -44,6 +44,65 @@
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<false/>
+				<key>output</key>
+				<integer>0</integer>
+				<key>removeextension</key>
+				<false/>
+				<key>sticky</key>
+				<false/>
+				<key>text</key>
+				<string>{query}</string>
+				<key>title</key>
+				<string>Switch DNS</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>A70A4E1E-712E-4575-967A-0AA64960904D</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>127</integer>
+				<key>script</key>
+				<string>function inet()
+{
+  local net=$(netstat -rn | awk '/default/{print $NF}')
+  echo $(networksetup -listnetworkserviceorder | \
+         awk "/$net/{print \$3}" | tr -d ', ')
+}
+
+dns=$(echo "{query}" | awk -F: '{print $2}' | sed 's/+/ /g')
+name=$(echo "{query}" | awk -F: '{print $1}')
+
+# Clear the dns 
+sudo dscacheutil -flushcache
+
+# Set the dns servers
+sudo networksetup -setdnsservers "$(inet)" $dns
+
+echo "Switch DNS to $name"
+echo $dns | sed 's/ / vs /g'</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>60A5A562-95DC-454A-808C-D331B1804CBD</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>escaping</key>
@@ -118,7 +177,7 @@ echo '&lt;/items&gt;'</string>
 				<key>subtext</key>
 				<string>DNS Switcher</string>
 				<key>title</key>
-				<string>def, ali, v2ex, 114, google, open</string>
+				<string>DNS Switcher</string>
 				<key>type</key>
 				<integer>0</integer>
 				<key>withspace</key>
@@ -128,65 +187,6 @@ echo '&lt;/items&gt;'</string>
 			<string>alfred.workflow.input.scriptfilter</string>
 			<key>uid</key>
 			<string>145D79C0-5B81-4825-8B40-5D27C8F15622</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>lastpathcomponent</key>
-				<false/>
-				<key>onlyshowifquerypopulated</key>
-				<false/>
-				<key>output</key>
-				<integer>0</integer>
-				<key>removeextension</key>
-				<false/>
-				<key>sticky</key>
-				<false/>
-				<key>text</key>
-				<string>{query}</string>
-				<key>title</key>
-				<string>Switch DNS</string>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.output.notification</string>
-			<key>uid</key>
-			<string>A70A4E1E-712E-4575-967A-0AA64960904D</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>escaping</key>
-				<integer>127</integer>
-				<key>script</key>
-				<string>function inet()
-{
-  local net=$(netstat -rn | awk '/default/{print $NF}')
-  echo $(networksetup -listnetworkserviceorder | \
-         awk "/$net/{print \$3}" | tr -d ', ')
-}
-
-dns=$(echo "{query}" | awk -F: '{print $2}' | sed 's/+/ /g')
-name=$(echo "{query}" | awk -F: '{print $1}')
-
-# Clear the dns 
-sudo dscacheutil -flushcache
-
-# Set the dns servers
-sudo networksetup -setdnsservers "$(inet)" $dns
-
-echo "Switch DNS to $name"
-echo $dns | sed 's/ / vs /g'</string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>60A5A562-95DC-454A-808C-D331B1804CBD</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
