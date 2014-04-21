@@ -1,0 +1,11 @@
+#
+# DNS Profiles
+#
+# Definition
+#   profile_name:dns_description:dns_servers
+#
+alibaba:Alibaba Public DNS:223.5.5.5,223.6.6.6
+v2ex:V2EX Public DNS:199.91.73.222,178.79.131.110
+114:114 Public DNS:114.114.114.114,114.114.115.115
+google:Google Public DNS:8.8.8.8,8.8.4.4
+openerdns:OpenerDNS:42.120.21.30
