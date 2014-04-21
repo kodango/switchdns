@@ -5,7 +5,7 @@
 . workflowHandler.sh
 
 # DNS Profile config file
-PROFILE_CONF='.dns_profile'
+PROFILE_CONF='dns.conf'
 
 # Icons folder
 ICONS_DIR="./icons"
