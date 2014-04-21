@@ -44,23 +44,6 @@
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>escaping</key>
-				<integer>127</integer>
-				<key>script</key>
-				<string>sh dns.sh switch_dns {query}</string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>FF316160-82F1-4AC1-8D82-72A1F0AC9ED6</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>lastpathcomponent</key>
 				<false/>
 				<key>onlyshowifquerypopulated</key>
@@ -95,7 +78,7 @@
 				<key>runningsubtext</key>
 				<string>zzZ...</string>
 				<key>script</key>
-				<string>sh dns.sh list_dns</string>
+				<string>sh dns_ops.sh list_dns</string>
 				<key>subtext</key>
 				<string>快速切换 DNS 服务器设置</string>
 				<key>title</key>
@@ -109,6 +92,23 @@
 			<string>alfred.workflow.input.scriptfilter</string>
 			<key>uid</key>
 			<string>E0DE2E8E-2801-452A-9098-6753C5A55DD2</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>127</integer>
+				<key>script</key>
+				<string>sh dns_ops.sh switch_dns {query}</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>FF316160-82F1-4AC1-8D82-72A1F0AC9ED6</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
