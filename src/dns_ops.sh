@@ -26,8 +26,8 @@ function get_curr_network_dev()
 function get_network_service()
 {
     # Do not check $1 value, maybe empty?
-    networksetup -listnetworkserviceorder | awk \
-            "/$1/{print \$3}" | tr -d ', ' | head -1
+    networksetup -listnetworkserviceorder | awk -F'(: )|(, )' \
+        "\$NF ~ /^$1\)/{print \$2}" | head -1
 }
 
 # Get the dns servers
@@ -106,7 +106,8 @@ function main()
     if [ "$1" = "list_dns" ]; then
         list_dns
     else
-        shift && switch_dns "$1"
+        shift
+        switch_dns "$1"
     fi
 }
 
