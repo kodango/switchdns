@@ -4,21 +4,13 @@
 # Source the workflow library
 . workflowHandler.sh
 
-# DNS Profile config file
-PROFILE_CONF='dns.conf'
-
 # Icons folder
 ICONS_DIR="./icons"
-
-# Current used network device
-CURR_DEV=''
-# Current used network service
-CURR_SERV=''
 
 # Get current network device name
 function get_curr_network_dev()
 {
-    netstat -rn | awk '/default/{print $NF}'
+    netstat -rn | awk '/default/{print $NF}' | head -1
 }
 
 # Get the network service name
@@ -46,11 +38,15 @@ function get_dns_servers()
 # Generate feedback results
 function list_dns()
 {
-    local cnt=0
-    local curr_dns=$(get_dns_servers "$CURR_SERV")
+    local curr_dev=$(get_curr_network_dev)
+    local curr_serv=$(get_network_service "$curr_dev")
+    local curr_dns=$(get_dns_servers "$curr_serv")
+
+    local extra_servers="$1" cnt=0
 
     local title subtitle arg icon
 
+    #echo "$extra_servers"
     while IFS=: read dns_name dns_desc dns_servers; do
         uid="switchdns-$cnt"
         let cnt+=1
@@ -74,7 +70,7 @@ function list_dns()
         addResult "$uid" "$arg" "$title" "$subtitle" "$icon" "yes"
     done <<EOF
 default:Default DNS:empty
-`grep -vE '(^[[:space:]]*$)|(^[[:space:]]*#)' $PROFILE_CONF`
+`echo "$extra_servers" | grep -vE '(^[[:space:]]*$)|(^[[:space:]]*#)'`
 EOF
     
     # Show feedback results
@@ -84,13 +80,16 @@ EOF
 # Switch dns profile
 function switch_dns()
 {
+    local curr_dev=$(get_curr_network_dev)
+    local curr_serv=$(get_network_service "$curr_dev")
+
     local dns_desc dns_servers
 
     dns_desc=$(echo "$1" | awk -F: '{print $1}')
     dns_servers=$(echo "$1" | awk -F: '{print $2}' | tr ',' ' ')
 
     # Set the dns servers
-    networksetup -setdnsservers "$CURR_SERV" $dns_servers
+    networksetup -setdnsservers "$curr_serv" $dns_servers
     # Clear the dns cache
     dscacheutil -flushcache
 
@@ -100,15 +99,9 @@ function switch_dns()
 # The main entry
 function main()
 {
-    CURR_DEV=$(get_curr_network_dev)
-    CURR_SERV=$(get_network_service "$CURR_DEV")
+    local action="$1"
 
-    if [ "$1" = "list_dns" ]; then
-        list_dns
-    else
-        shift
-        switch_dns "$1"
-    fi
+    shift && $action "$@" 2>/dev/null
 }
 
 main "$@" # Run from here

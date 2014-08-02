@@ -5,7 +5,7 @@
 	<key>bundleid</key>
 	<string>com.kodango.switchdns</string>
 	<key>category</key>
-	<string>Tools</string>
+	<string>Internet</string>
 	<key>connections</key>
 	<dict>
 		<key>E0DE2E8E-2801-452A-9098-6753C5A55DD2</key>
@@ -44,6 +44,41 @@
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>escaping</key>
+				<integer>127</integer>
+				<key>keyword</key>
+				<string>sdns</string>
+				<key>runningsubtext</key>
+				<string>zzZ...</string>
+				<key>script</key>
+				<string>sh dns_ops.sh list_dns "
+alibaba:Alibaba Public DNS:223.5.5.5,223.6.6.6
+v2ex:V2EX Public DNS:199.91.73.222,178.79.131.110
+114:114 Public DNS:114.114.114.114,114.114.115.115
+google:Google Public DNS:8.8.8.8,8.8.4.4
+openerdns:OpenerDNS:42.120.21.30
+"</string>
+				<key>subtext</key>
+				<string>快速切换 DNS 服务器设置</string>
+				<key>title</key>
+				<string>Switch DNS</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>E0DE2E8E-2801-452A-9098-6753C5A55DD2</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>lastpathcomponent</key>
 				<false/>
 				<key>onlyshowifquerypopulated</key>
@@ -63,35 +98,6 @@
 			<string>alfred.workflow.output.notification</string>
 			<key>uid</key>
 			<string>3152A3A2-FCCD-42B3-B07F-301144CD559B</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>escaping</key>
-				<integer>127</integer>
-				<key>keyword</key>
-				<string>sdns</string>
-				<key>runningsubtext</key>
-				<string>zzZ...</string>
-				<key>script</key>
-				<string>sh dns_ops.sh list_dns</string>
-				<key>subtext</key>
-				<string>快速切换 DNS 服务器设置</string>
-				<key>title</key>
-				<string>Switch DNS</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>E0DE2E8E-2801-452A-9098-6753C5A55DD2</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
